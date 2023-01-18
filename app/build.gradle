@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     id 'com.adarshr.test-logger' version '3.0.0'
     id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'io.ebean' version '13.6.5'
 }
 
 group 'hexlet.code'
@@ -25,8 +26,18 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'org.assertj:assertj-core:3.21.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
     implementation 'io.javalin:javalin:5.3.1'
     implementation 'org.slf4j:slf4j-simple:2.0.6'
+    implementation 'io.ebean:ebean:13.6.5'
+    implementation 'io.ebean:ebean-ddl-generator:13.6.5'
+    implementation 'io.ebean:ebean-querybean:13.6.5'
+    implementation 'io.ebean:ebean-migration:13.6.2'
+    implementation 'io.ebean:ebean-annotation:8.3'
+    annotationProcessor 'io.ebean:querybean-generator:13.6.5'
+
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
+    implementation 'javax.activation:activation:1.1.1'
 }
 
 test {
@@ -47,6 +58,11 @@ checkstyle {
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+task generateMigrations(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'hexlet.code.GenerateDbMigration'
 }
 
 task stage(dependsOn: ['clean', 'installDist'])
