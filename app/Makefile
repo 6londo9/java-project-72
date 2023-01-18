@@ -1,5 +1,5 @@
-.DEFUALT_GOAL := build-run
-
+setup:
+	gradle wrapper --gradle-version 7.4
 
 clean:
 	./gradlew clean
@@ -7,14 +7,20 @@ clean:
 build:
 	./gradlew clean build
 
+start:
+	APP_ENV=development ./gradlew run
+
 install:
-	./gradlew clean install
+	./gradlew install
 
-run-dist:
-	./build/install/app/bin/app
+start-dist:
+	APP_ENV=production ./build/install/java-javalin-blog/bin/java-javalin-blog
 
-run:
-	./gradlew run
+generate-migrations:
+	./gradlew generateMigrations
+
+lint:
+	./gradlew checkstyleMain checkstyleTest
 
 test:
 	./gradlew test
@@ -22,10 +28,7 @@ test:
 report:
 	./gradlew jacocoTestReport
 
-lint:
-	./gradlew checkstyleMain checkstyleTest
-
-
-build-run: build run
+check-updates:
+	./gradlew dependencyUpdates
 
 .PHONY: build
