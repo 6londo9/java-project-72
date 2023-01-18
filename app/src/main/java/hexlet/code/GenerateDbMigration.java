@@ -10,7 +10,7 @@ public class GenerateDbMigration {
 
         DbMigration dbMigration = DbMigration.create();
 
-        dbMigration.setPlatform(Platform.H2);
+        dbMigration.addPlatform(Platform.H2, "h2");
 
         dbMigration.generateMigration();
     }
