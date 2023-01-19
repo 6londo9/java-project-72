@@ -11,6 +11,7 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import hexlet.code.controllers.RootController;
 
 public class App {
+
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "5000");
         return Integer.valueOf(port);
@@ -33,17 +34,18 @@ public class App {
     private static TemplateEngine getTemplateEngine() {
         TemplateEngine templateEngine = new TemplateEngine();
 
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
+
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/templates/");
 
         templateEngine.addTemplateResolver(templateResolver);
-        templateEngine.addDialect(new LayoutDialect());
-        templateEngine.addDialect(new Java8TimeDialect());
 
         return templateEngine;
     }
 
-    public static Javalin getApp() {
+    private static Javalin getApp() {
 
         Javalin app = Javalin.create(config -> {
             if (!isProduction()) {
