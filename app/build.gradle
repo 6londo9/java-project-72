@@ -80,6 +80,6 @@ task generateMigrations(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'hexlet.code.GenerateDbMigration'
 }
-
-task stage(dependsOn: ['clean', 'installDist'])
-installDist.mustRunAfter clean
+//
+//task stage(dependsOn: ['clean', 'installDist'])
+//installDist.mustRunAfter clean
