@@ -56,7 +56,7 @@ public class App {
         return templateEngine;
     }
 
-    private static Javalin getApp() {
+    public static Javalin getApp() {
 
         Javalin app = Javalin.create(config -> {
             if (!isProduction()) {
