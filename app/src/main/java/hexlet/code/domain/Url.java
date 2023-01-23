@@ -15,12 +15,12 @@ import java.time.Instant;
 public class Url extends Model {
 
     @Id
-    long id;
+    private long id;
 
-    String name;
+    private String name;
 
     @WhenCreated
-    Instant createdAt;
+    private Instant createdAt;
 
     public Url (String name) {
         this.name = name;
