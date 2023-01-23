@@ -60,11 +60,13 @@ test {
     useJUnitPlatform()
 }
 
+testlogger {
+    showStandardStreams true
+}
+
 jacocoTestReport {
     reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        xml.required = true
     }
 }
 
@@ -80,6 +82,3 @@ task generateMigrations(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'hexlet.code.GenerateDbMigration'
 }
-//
-//task stage(dependsOn: ['clean', 'installDist'])
-//installDist.mustRunAfter clean
