@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Table(name="urls")
+@Table(name = "urls")
 @Getter
 public class Url extends Model {
 
@@ -22,7 +22,7 @@ public class Url extends Model {
     @WhenCreated
     private Instant createdAt;
 
-    public Url (String name) {
-        this.name = name;
+    public Url(String urlName) {
+        this.name = urlName;
     }
 }

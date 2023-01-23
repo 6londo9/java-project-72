@@ -11,7 +11,10 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 import hexlet.code.controllers.RootController;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
+
 
 public class App {
 

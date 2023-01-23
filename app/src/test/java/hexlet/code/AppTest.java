@@ -6,6 +6,7 @@ import io.ebean.DB;
 import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
+import kong.unirest.HttpStatus;
 import kong.unirest.Unirest;
 
 import org.junit.jupiter.api.AfterAll;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AppTest {
+public final class AppTest {
 
     private static Javalin app;
     private static String baseUrl;
@@ -47,7 +48,7 @@ public class AppTest {
                 .get(baseUrl + "/")
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class AppTest {
                 .field("url", urlName)
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
 
         Url newUrl = new QUrl()
                 .name.equalTo(urlName)
@@ -77,7 +78,7 @@ public class AppTest {
                 .field("url", incorrectUrlName)
                 .asEmpty();
 
-        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
 
         Url testUrl = new QUrl()
                 .name.equalTo(incorrectUrlName)
@@ -94,7 +95,7 @@ public class AppTest {
                 .get(baseUrl + "/urls")
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).contains(existingUrl);
     }
 
@@ -110,7 +111,7 @@ public class AppTest {
                 .get(baseUrl + "/urls/" + existingUrl.getId())
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).contains(existingUrlName);
     }
 }

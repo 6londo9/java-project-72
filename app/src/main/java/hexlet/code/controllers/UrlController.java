@@ -11,6 +11,7 @@ import java.net.URL;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
+import org.eclipse.jetty.http.HttpStatus;
 
 public class UrlController {
 
@@ -58,7 +59,7 @@ public class UrlController {
         Map<String, List<ValidationError<?>>> errors = JavalinValidation.collectErrors(urlValidator);
 
         if (!errors.isEmpty()) {
-            ctx.status(422);
+            ctx.status(HttpStatus.UNPROCESSABLE_ENTITY_422);
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.redirect("/");
             return;
