@@ -15,6 +15,9 @@ import hexlet.code.domain.query.QUrl;
 import kong.unirest.HttpResponse;
 import kong.unirest.HttpStatus;
 import kong.unirest.Unirest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 public class UrlController {
 
@@ -95,11 +98,13 @@ public class UrlController {
         HttpResponse<String> response = Unirest
                 .get(url.getName())
                 .asString();
+        String html = response.getBody();
+        Document doc = Jsoup.parse(html);
 
         int statusCode = response.getStatus();
-        String title = response.getHeaders().getFirst("title");
-        String h1 = response.getHeaders().getFirst("h1");
-        String description = response.getBody().;
+        String title = doc.title();
+        String h1 = doc.select("h1").text();
+        String description = doc.select("meta[name=description]").get(0).attr("content");
 
         UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
         urlCheck.save();
