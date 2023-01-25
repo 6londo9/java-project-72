@@ -40,6 +40,9 @@ dependencies {
     implementation 'io.ebean:ebean-migration:12.11.2'
     implementation 'io.ebean:ebean-annotation:7.3'
     annotationProcessor 'io.ebean:querybean-generator:12.11.5'
+    implementation 'com.konghq:unirest-java:3.13.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+
 
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
     implementation 'javax.activation:activation:1.1.1'

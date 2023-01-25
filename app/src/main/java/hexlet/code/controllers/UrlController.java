@@ -1,5 +1,6 @@
 package hexlet.code.controllers;
 
+import hexlet.code.domain.UrlCheck;
 import io.javalin.core.validation.JavalinValidation;
 import io.javalin.core.validation.ValidationError;
 import io.javalin.core.validation.Validator;
@@ -11,7 +12,9 @@ import java.net.URL;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
-import org.eclipse.jetty.http.HttpStatus;
+import kong.unirest.HttpResponse;
+import kong.unirest.HttpStatus;
+import kong.unirest.Unirest;
 
 public class UrlController {
 
@@ -19,7 +22,7 @@ public class UrlController {
 
         List<Url> urls = new QUrl()
                 .orderBy()
-                    .id.asc()
+                    .id.desc()
                 .findList();
 
         ctx.attribute("urls", urls);
@@ -47,6 +50,7 @@ public class UrlController {
                     .append(incomeUrl.getProtocol())
                     .append("://")
                     .append(incomeUrl.getAuthority())
+                    .append("/")
                     .toString();
 
         } catch (Exception e) {
@@ -59,7 +63,7 @@ public class UrlController {
         Map<String, List<ValidationError<?>>> errors = JavalinValidation.collectErrors(urlValidator);
 
         if (!errors.isEmpty()) {
-            ctx.status(HttpStatus.UNPROCESSABLE_ENTITY_422);
+            ctx.status(HttpStatus.UNPROCESSABLE_ENTITY);
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.redirect("/");
             return;
@@ -78,5 +82,28 @@ public class UrlController {
             ctx.sessionAttribute("flash", "Страница успешно добавлена!");
         }
         ctx.redirect("/urls");
+    };
+
+    public static Handler checkUrl = ctx -> {
+
+        long id = ctx.pathParamAsClass("id", long.class).getOrDefault(null);
+
+        Url url = new QUrl()
+                .id.equalTo(id)
+                .findOne();
+
+        HttpResponse<String> response = Unirest
+                .get(url.getName())
+                .asString();
+
+        int statusCode = response.getStatus();
+        String title = response.getHeaders().getFirst("title");
+        String h1 = response.getHeaders().getFirst("h1");
+        String description = response.getBody().;
+
+        UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
+        urlCheck.save();
+
+        ctx.redirect("/urls/" + id);
     };
 }

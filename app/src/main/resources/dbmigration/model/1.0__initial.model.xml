@@ -3,7 +3,16 @@
     <changeSet type="apply">
         <createTable name="urls" pkName="pk_urls">
             <column name="id" type="bigint" primaryKey="true"/>
-            <column name="name" type="varchar"/>
+            <column name="name" type="varchar" unique="uq_urls_name"/>
+            <column name="created_at" type="timestamp" notnull="true"/>
+        </createTable>
+        <createTable name="url_checks" pkName="pk_url_checks">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="status_code" type="integer" notnull="true"/>
+            <column name="title" type="varchar"/>
+            <column name="h1" type="varchar"/>
+            <column name="description" type="clob"/>
+            <column name="url_id" type="bigint" references="urls.id" foreignKeyName="fk_url_checks_url_id" foreignKeyIndex="ix_url_checks_url_id"/>
             <column name="created_at" type="timestamp" notnull="true"/>
         </createTable>
     </changeSet>
