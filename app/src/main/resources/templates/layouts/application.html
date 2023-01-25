@@ -28,19 +28,19 @@
     </div>
   </nav>
   <main class="flex-grow-1">
-    <div th:if="${session.flash} == 'Некорректный URL'"
+    <div th:if="${session.flash} eq 'Некорректный URL'"
          class="rounded-0 m-0 alert alert-dismissible fade show alert-danger" role="alert">
       <div th:if="${session.flash}" class="m-0" th:text="${session.flash}"></div>
       <div th:if="${session.flash}" th:text="${#session.removeAttribute('flash')}"></div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div th:if="${session.flash} == 'Страница уже существует'"
+    <div th:if="${session.flash} eq 'Страница уже существует'"
          class="rounded-0 m-0 alert alert-dismissible fade show alert-info" role="alert">
       <div th:if="${session.flash}" class="m-0" th:text="${session.flash}"></div>
       <div th:if="${session.flash}" th:text="${#session.removeAttribute('flash')}"></div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div th:if="${session.flash} == 'Страница успешно добавлена!'"
+    <div th:if="${session.flash} eq 'Страница успешно добавлена!' or ${session.flash} eq 'Страница успешно проверена'"
          class="rounded-0 m-0 alert alert-dismissible fade show alert-success" role="alert">
       <div th:if="${session.flash}" class="m-0" th:text="${session.flash}"></div>
       <div th:if="${session.flash}" th:text="${#session.removeAttribute('flash')}"></div>

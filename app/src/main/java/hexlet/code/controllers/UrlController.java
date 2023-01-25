@@ -17,7 +17,6 @@ import kong.unirest.HttpStatus;
 import kong.unirest.Unirest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 public class UrlController {
 
@@ -25,7 +24,7 @@ public class UrlController {
 
         List<Url> urls = new QUrl()
                 .orderBy()
-                    .id.desc()
+                    .id.asc()
                 .findList();
 
         ctx.attribute("urls", urls);
@@ -109,6 +108,7 @@ public class UrlController {
         UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
         urlCheck.save();
 
+        ctx.sessionAttribute("flash", "Страница успешно проверена");
         ctx.redirect("/urls/" + id);
     };
 }
