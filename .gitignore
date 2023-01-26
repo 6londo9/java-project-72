@@ -2,6 +2,7 @@
 build
 .idea/
 *.sql
-*.xml
-*.db
+project-4.mv.db
 !truncate.sql
+*.xml
+!checkstyle.xml
