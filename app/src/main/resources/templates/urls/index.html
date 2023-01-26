@@ -21,10 +21,9 @@
           <td>
             <a th:text="*{name}" th:href="@{/urls/{id}(id=*{id})}"></a>
           </td>
-          <td th:unless="*{checks.empty}"
-              th:text="${#temporals.format(url.getChecks().get(0).getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
-          <td th:unless="*{checks.empty}"
-              th:text="*{checks.get(0).statusCode}"></td>
+          <td th:text="*{checks.empty}?
+          '' : ${#temporals.format(url.getChecks().get(0).getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+          <td th:text="*{checks.empty}? '' : *{checks.get(0).statusCode}"></td>
         </tr>
       </tbody>
     </table>

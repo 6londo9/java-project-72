@@ -52,7 +52,6 @@ public class UrlController {
                     .append(incomeUrl.getProtocol())
                     .append("://")
                     .append(incomeUrl.getAuthority())
-                    .append("/")
                     .toString();
 
         } catch (Exception e) {
@@ -103,7 +102,7 @@ public class UrlController {
         int statusCode = response.getStatus();
         String title = doc.title();
         String h1 = doc.select("h1").text();
-        String description = doc.select("meta[name=description]").get(0).attr("content");
+        String description = doc.select("meta[name=description]").attr("content");
 
         UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
         urlCheck.save();
