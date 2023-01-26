@@ -3,5 +3,3 @@ build
 .idea/
 *.sql
 !truncate.sql
-model/*
-app/*.db
