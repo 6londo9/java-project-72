@@ -2,3 +2,4 @@
 build
 .idea/
 *.sql
+!truncate.sql
