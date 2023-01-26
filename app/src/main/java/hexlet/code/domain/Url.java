@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "urls")
+//@Table(name = "urls")
 @Getter
 public class Url extends Model {
 
