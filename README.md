@@ -3,7 +3,7 @@
 <a href="https://codeclimate.com/github/6londo9/java-project-72/maintainability"><img src="https://api.codeclimate.com/v1/badges/a23396132a7fbd5c721c/maintainability" /></a>
 <a href="https://codeclimate.com/github/6londo9/java-project-72/test_coverage"><img src="https://api.codeclimate.com/v1/badges/a23396132a7fbd5c721c/test_coverage" /></a>
 ---
-### [Page analizator](https://java-project-72-production-348f.up.railway.app/)
+### [Page Analyzer](https://java-project-72-production-348f.up.railway.app/)
 #### This is a Web app, that you can use to check different sites for SEO suitability, like:
 
 - Status code
