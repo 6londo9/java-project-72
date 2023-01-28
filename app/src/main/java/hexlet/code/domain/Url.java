@@ -3,6 +3,7 @@ package hexlet.code.domain;
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@ToString
 public class Url extends Model {
 
     @Id

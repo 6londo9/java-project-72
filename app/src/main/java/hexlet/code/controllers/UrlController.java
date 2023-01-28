@@ -1,19 +1,15 @@
 package hexlet.code.controllers;
 
 import hexlet.code.domain.UrlCheck;
-import io.javalin.core.validation.JavalinValidation;
-import io.javalin.core.validation.ValidationError;
-import io.javalin.core.validation.Validator;
 import io.javalin.http.Handler;
 
 import java.util.List;
-import java.util.Map;
 import java.net.URL;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
+import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
-import kong.unirest.HttpStatus;
 import kong.unirest.Unirest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,12 +18,24 @@ public class UrlController {
 
     public static Handler listUrls = ctx -> {
 
+        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        int rowsPerPage = 10;
+        int offset = (page - 1) * rowsPerPage;
+        int idCount = new QUrl()
+                .findList().size();
+        int maxPage = idCount / rowsPerPage + ((idCount % rowsPerPage == 0) ? 0 : 1);
+
         List<Url> urls = new QUrl()
+                .setFirstRow(offset)
+                .setMaxRows(rowsPerPage)
                 .orderBy()
                     .id.asc()
-                .findList();
+                .findPagedList()
+                .getList();
 
         ctx.attribute("urls", urls);
+        ctx.attribute("page", page);
+        ctx.attribute("maxPage", maxPage);
         ctx.render("urls/index.html");
     };
 
@@ -38,49 +46,48 @@ public class UrlController {
                 .id.equalTo(id)
                 .findOne();
 
+        if (url == null) {
+            throw new NotFoundResponse();
+        }
+
         ctx.attribute("url", url);
         ctx.render("urls/show.html");
     };
 
     public static Handler createUrl = ctx -> {
 
-        String url = "";
+        String inputUrl = ctx.formParam("url");
+        URL parsedUrl;
 
         try {
-            URL incomeUrl = new URL(ctx.formParam("url"));
-            url = new StringBuilder()
-                    .append(incomeUrl.getProtocol())
-                    .append("://")
-                    .append(incomeUrl.getAuthority())
-                    .toString();
+            parsedUrl = new URL(inputUrl);
 
         } catch (Exception e) {
-
-        }
-
-        Validator<String> urlValidator = new Validator<>(url, String.class, "url")
-                .check(value -> !value.equals(""), "Некорректный URL");
-
-        Map<String, List<ValidationError<?>>> errors = JavalinValidation.collectErrors(urlValidator);
-
-        if (!errors.isEmpty()) {
-            ctx.status(HttpStatus.UNPROCESSABLE_ENTITY);
             ctx.sessionAttribute("flash", "Некорректный URL");
+            ctx.sessionAttribute("flashType", "danger");
             ctx.redirect("/");
             return;
         }
 
-        Url isExist = new QUrl()
-                .name.equalTo(url)
+        String normalizedUrl = new StringBuilder()
+                .append(parsedUrl.getProtocol())
+                .append("://")
+                .append(parsedUrl.getAuthority())
+                .toString();
+
+        Url url = new QUrl()
+                .name.equalTo(normalizedUrl)
                 .findOne();
 
-        if (isExist != null) {
+        if (url != null) {
             ctx.sessionAttribute("flash", "Страница уже существует");
+            ctx.sessionAttribute("flashType", "info");
 
         } else {
-            Url newUrl = new Url(url);
+            Url newUrl = new Url(normalizedUrl);
             newUrl.save();
             ctx.sessionAttribute("flash", "Страница успешно добавлена!");
+            ctx.sessionAttribute("flashType", "success");
         }
         ctx.redirect("/urls");
     };
@@ -93,21 +100,35 @@ public class UrlController {
                 .id.equalTo(id)
                 .findOne();
 
-        HttpResponse<String> response = Unirest
-                .get(url.getName())
-                .asString();
-        String html = response.getBody();
-        Document doc = Jsoup.parse(html);
+        if (url == null) {
+            throw new NotFoundResponse();
+        }
 
-        int statusCode = response.getStatus();
-        String title = doc.title();
-        String h1 = doc.select("h1").text();
-        String description = doc.select("meta[name=description]").attr("content");
+        HttpResponse<String> response;
+        try {
+            response = Unirest
+                    .get(url.getName())
+                    .asString();
+            String html = response.getBody();
+            Document doc = Jsoup.parse(html);
 
-        UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
-        urlCheck.save();
+            int statusCode = response.getStatus();
+            String title = doc.title();
+            String h1 = doc.select("h1").text();
+            String description = doc.select("meta[name=description]").attr("content");
 
-        ctx.sessionAttribute("flash", "Страница успешно проверена");
-        ctx.redirect("/urls/" + id);
+            UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, url);
+            urlCheck.save();
+
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flashType", "success");
+
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", "Некорректный адрес");
+            ctx.sessionAttribute("flashType", "danger");
+
+        } finally {
+            ctx.redirect("/urls/" + id);
+        }
     };
 }
