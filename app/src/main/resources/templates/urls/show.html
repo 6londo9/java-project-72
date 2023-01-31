@@ -38,7 +38,7 @@
         <th class="col-2">Дата проверки</th>
         </thead>
       <tbody>
-        <tr th:each="check : *{checks}" th:object="${check}">
+        <tr th:each="check : ${urlChecks}" th:object="${check}">
           <td th:text="*{id}"></td>
           <td th:text="*{statusCode}"></td>
           <td th:text="*{title}"></td>

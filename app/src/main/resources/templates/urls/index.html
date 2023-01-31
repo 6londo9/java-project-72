@@ -16,14 +16,13 @@
       </tr>
       </thead>
       <tbody>
-        <tr th:each="url : ${urls}" th:object="${url}">
-          <td th:text="*{id}"></td>
+        <tr th:each="url : ${urls}" th:object="${url}" th:with="urlCheck=${urlChecks.get(url.getId())}">
+          <td th:text="${url.id}"></td>
           <td>
-            <a th:text="*{name}" th:href="@{/urls/{id}(id=*{id})}"></a>
+            <a th:text="${url.name}" th:href="@{/urls/{id}(id=${url.id})}"></a>
           </td>
-          <td th:text="*{checks.empty}?
-          '' : ${#temporals.format(url.getChecks().get(0).getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
-          <td th:text="*{checks.empty}? '' : *{checks.get(0).statusCode}"></td>
+          <td th:text="${urlCheck ? #temporals.format(urlCheck.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></td>
+          <td th:text="${urlCheck ? urlCheck.getStatusCode() : ''}"></td>
         </tr>
       </tbody>
     </table>

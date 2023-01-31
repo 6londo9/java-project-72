@@ -1,10 +1,12 @@
 package hexlet.code.controllers;
 
 import hexlet.code.domain.UrlCheck;
+import hexlet.code.domain.query.QUrlCheck;
 import io.javalin.http.Handler;
 
 import java.util.List;
 import java.net.URL;
+import java.util.Map;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
@@ -33,7 +35,14 @@ public class UrlController {
                 .findPagedList()
                 .getList();
 
+        Map<Long, UrlCheck> urlChecks = new QUrlCheck()
+                .url.id.asMapKey()
+                .orderBy()
+                    .createdAt.desc()
+                .findMap();
+
         ctx.attribute("urls", urls);
+        ctx.attribute("urlChecks", urlChecks);
         ctx.attribute("page", page);
         ctx.attribute("maxPage", maxPage);
         ctx.render("urls/index.html");
@@ -43,14 +52,22 @@ public class UrlController {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
 
         Url url = new QUrl()
+                .where()
                 .id.equalTo(id)
                 .findOne();
+        List<UrlCheck> checks = new QUrlCheck()
+                .where()
+                .url.equalTo(url)
+                .orderBy()
+                .id.desc()
+                .findList();
 
         if (url == null) {
             throw new NotFoundResponse();
         }
 
         ctx.attribute("url", url);
+        ctx.attribute("urlChecks", checks);
         ctx.render("urls/show.html");
     };
 
