@@ -3,7 +3,6 @@ package hexlet.code.domain;
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import lombok.Getter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
