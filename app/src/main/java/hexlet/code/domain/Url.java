@@ -14,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString
 public class Url extends Model {
 
     @Id

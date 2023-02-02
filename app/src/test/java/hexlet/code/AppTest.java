@@ -129,6 +129,19 @@ public final class AppTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).contains(existingUrlName);
+
+        HttpResponse<String> responsePost = Unirest
+                .post(baseUrl + "/urls/" + existingUrl.getId() + "/checks")
+                .asString();
+
+        assertThat(responsePost.getStatus()).isEqualTo(302);
+
+        HttpResponse<String> responseGet = Unirest
+                .get(baseUrl + "/urls/" + existingUrl.getId())
+                .asString();
+
+        assertThat(responseGet.getStatus()).isEqualTo(200);
+        assertThat(responseGet.getBody()).contains("200");
     }
 
     @Test
