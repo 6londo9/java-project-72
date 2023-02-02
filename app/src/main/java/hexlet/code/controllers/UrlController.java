@@ -52,22 +52,17 @@ public class UrlController {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
 
         Url url = new QUrl()
-                .where()
                 .id.equalTo(id)
-                .findOne();
-        List<UrlCheck> checks = new QUrlCheck()
-                .where()
-                .url.equalTo(url)
+                .checks.fetch()
                 .orderBy()
-                .id.desc()
-                .findList();
+                    .checks.createdAt.desc()
+                .findOne();
 
         if (url == null) {
             throw new NotFoundResponse();
         }
 
         ctx.attribute("url", url);
-        ctx.attribute("urlChecks", checks);
         ctx.render("urls/show.html");
     };
 
@@ -144,8 +139,7 @@ public class UrlController {
             ctx.sessionAttribute("flash", "Некорректный адрес");
             ctx.sessionAttribute("flashType", "danger");
 
-        } finally {
-            ctx.redirect("/urls/" + id);
         }
+        ctx.redirect("/urls/" + id);
     };
 }
